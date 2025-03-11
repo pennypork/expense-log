@@ -22,7 +22,7 @@ export function ExpenseTable({ expenses }: ExpenseTableProps) {
 			<TableHeader>
 				<TableRow>
 					<TableHead className="w-20">Date</TableHead>
-					<TableHead>Target</TableHead>
+					<TableHead>Description</TableHead>
 					<TableHead className="text-right">Amount</TableHead>
 				</TableRow>
 			</TableHeader>
@@ -30,7 +30,7 @@ export function ExpenseTable({ expenses }: ExpenseTableProps) {
 				{expenses.map((expense) => (
 					<TableRow key={expense.expenseId}>
 						<TableCell>{formatDate(expense.expensedAt, "M/D")}</TableCell>
-						<TableCell>{expense.target}</TableCell>
+						<TableCell>{expense.description}</TableCell>
 						<TableCell className="text-right">
 							{expense.amount.toLocaleString("en-US", {
 								style: "currency",
