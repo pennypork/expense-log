@@ -1,8 +1,8 @@
 export type Expense = {
-	expenseId: string;
+	expenseId: number;
 	expensedAt: string;
 	description: string;
-	memo: string;
 	amount: number;
-	expenseCategoryId: string;
+	expenseCategoryId: number | null;
+	memo: string;
 };

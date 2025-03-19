@@ -1,4 +1,8 @@
+import { ExpenseContextProvider } from "@/hooks/use-expense";
+import { ExpenseCategoryContextProvider } from "@/hooks/use-expense-category";
+import { ExpenseCategoryGroupContextProvider } from "@/hooks/use-expense-category-group";
 import type { Metadata } from "next";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,7 +17,15 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body>{children}</body>
+			<body>
+				<ExpenseContextProvider>
+					<ExpenseCategoryContextProvider>
+						<ExpenseCategoryGroupContextProvider>
+							{children}
+						</ExpenseCategoryGroupContextProvider>
+					</ExpenseCategoryContextProvider>
+				</ExpenseContextProvider>
+			</body>
 		</html>
 	);
 }

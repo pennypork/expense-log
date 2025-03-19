@@ -8,7 +8,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { formatDate } from "@/lib/date";
-import type { Expense } from "@/type/expense";
+import type { Expense } from "@/types/expense";
 
 export type ExpenseTableProps = {
 	expenses: Expense[];
