@@ -6,14 +6,15 @@ import { AddExpenseDialog } from "./add-expense-dialog";
 import { ExpenseTable } from "./expense-table";
 
 export function ExpenseRoot() {
-	const { expenses } = useContext(ExpenseContext);
+	const { expenses, addExpense } = useContext(ExpenseContext);
 
-	console.log(expenses);
 	return (
 		<main className="p-5">
 			<div className="mx-auto max-w-xl">
 				<ExpenseTable expenses={expenses} />
-				<AddExpenseDialog />
+				<div className="mt-5 text-center">
+					<AddExpenseDialog addExpense={addExpense} />
+				</div>
 			</div>
 		</main>
 	);

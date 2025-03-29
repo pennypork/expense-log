@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -29,56 +31,58 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { ExpenseContext } from "@/hooks/use-expense";
+import { Textarea } from "@/components/ui/textarea";
 import { formatDate } from "@/lib/date";
 import { cn } from "@/lib/utils";
+import type { Expense } from "@/types/expense";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon } from "lucide-react";
-import { useContext } from "react";
+import { CalendarIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const addExpenseFormSchema = z.object({
-	expensedAt: z.date(),
-	description: z.string(),
+	expensedAt: z.preprocess(
+		(v) =>
+			formatDate(v instanceof Date ? new Date(v) : new Date(), "YYYY-MM-DD"),
+		z.string().date(),
+	),
+	description: z.string().min(1),
 	memo: z.string(),
-	amount: z.preprocess((v) => {
-		console.log("debug", Number(v));
-		return Number(v);
-	}, z.number().int()),
-	expenseCategoryId: z.string(),
+	amount: z.preprocess((v) => Number(v), z.number().int()),
+	expenseCategoryId: z.preprocess(
+		(v) => Number(v),
+		z.number().int().nullable(),
+	),
 });
 
-export function AddExpenseDialog() {
-	const { addExpense } = useContext(ExpenseContext);
+export type AddExpenseDialog = {
+	addExpense: (expenses: Omit<Expense, "expenseId">) => void;
+};
 
+export function AddExpenseDialog({ addExpense }: AddExpenseDialog) {
 	const form = useForm<z.infer<typeof addExpenseFormSchema>>({
 		resolver: zodResolver(addExpenseFormSchema),
 		mode: "onBlur",
 		defaultValues: {
-			expensedAt: new Date(),
+			expensedAt: formatDate(new Date(), "YYYY-MM-DD"),
 			description: "",
+			amount: undefined,
+			expenseCategoryId: null,
 			memo: "",
-			amount: 0,
-			expenseCategoryId: "",
 		},
 	});
 
 	function onSubmit(values: z.infer<typeof addExpenseFormSchema>) {
-		console.log(values);
-		addExpense({
-			expensedAt: "2025-03-06",
-			description: "Lunch",
-			memo: "",
-			amount: 10,
-			expenseCategoryId: 1,
-		});
+		form.reset();
+		addExpense(values);
 	}
 
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button variant="outline">Add Expense</Button>
+				<Button variant="outline">
+					<PlusIcon /> Add Expense
+				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<Form {...form}>
@@ -114,7 +118,7 @@ export function AddExpenseDialog() {
 										<PopoverContent className="w-auto p-0" align="start">
 											<Calendar
 												mode="single"
-												selected={field.value}
+												selected={new Date(field.value)}
 												onSelect={field.onChange}
 												disabled={(date) =>
 													date > new Date() || date < new Date("1900-01-01")
@@ -147,7 +151,12 @@ export function AddExpenseDialog() {
 								<FormItem>
 									<FormLabel>amount</FormLabel>
 									<FormControl>
-										<Input type="number" {...field} />
+										<Input
+											type="number"
+											placeholder="100"
+											{...field}
+											value={field.value ?? ""}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -159,23 +168,16 @@ export function AddExpenseDialog() {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>expenseCategoryId</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
+									<Select onValueChange={field.onChange}>
 										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select a verified email to display" />
+											<SelectTrigger className="w-[180px]">
+												<SelectValue placeholder="not categorized" />
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
-											<SelectItem value="m@example.com">
-												m@example.com
-											</SelectItem>
-											<SelectItem value="m@google.com">m@google.com</SelectItem>
-											<SelectItem value="m@support.com">
-												m@support.com
-											</SelectItem>
+											<SelectItem value="1">category 1</SelectItem>
+											<SelectItem value="2">category 2</SelectItem>
+											<SelectItem value="3">category 3</SelectItem>
 										</SelectContent>
 									</Select>
 									<FormMessage />
@@ -189,7 +191,7 @@ export function AddExpenseDialog() {
 								<FormItem>
 									<FormLabel>memo</FormLabel>
 									<FormControl>
-										<Input {...field} />
+										<Textarea {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

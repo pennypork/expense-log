@@ -1,12 +1,19 @@
 import type { Expense } from "@/types/expense";
-import { type StoreName, addOne, getMulti, getOne } from "./idb";
+import { STORE_NAME, addOne, get, getAll } from "./idb";
 
-const STORE_NAME: StoreName = "expenses";
-
-export function getExpense(expenseId: number): Promise<Expense | undefined> {
-	return getOne<Expense>(STORE_NAME, expenseId);
+export async function getExpense(
+	expenseId: number,
+): Promise<Expense | undefined> {
+	return get<Expense>(STORE_NAME.EXPENSE, expenseId);
 }
 
 export function getAllExpenses(): Promise<Expense[] | undefined> {
-	return getMulti<Expense>(STORE_NAME);
+	return getAll<Expense>(STORE_NAME.EXPENSE);
+}
+
+export async function addExpense(
+	expense: Omit<Expense, "expenseId">,
+): Promise<number> {
+	const expenseId = await addOne(STORE_NAME.EXPENSE, expense);
+	return expenseId;
 }

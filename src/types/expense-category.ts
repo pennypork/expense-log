@@ -1,9 +1,8 @@
-import type { ColorName, ColorTone } from "@/lib/color";
+import type { Color } from "@/lib/color";
 
 export type ExpenseCategory = {
 	expenseCategoryId: number;
 	name: string;
-	colorName: ColorName;
-	colorTone: ColorTone;
+	color: Color;
 	expenseCategoryGroupId: number | null;
 };

@@ -1,11 +1,11 @@
 "use client";
 
-import { getAllExpenses } from "@/lib/idb/expense";
-import { type StoreName, addOne } from "@/lib/idb/idb";
+import {
+	addExpense as addExpenseToDB,
+	getAllExpenses,
+} from "@/lib/idb/expense";
 import type { Expense } from "@/types/expense";
 import { type ReactNode, createContext, useEffect, useState } from "react";
-
-const STORE_NAME: StoreName = "expenses";
 
 type ExpenseContextValue = {
 	expenses: Expense[];
@@ -28,7 +28,6 @@ export function ExpenseContextProvider({
 	useEffect(() => {
 		(async () => {
 			const allExpenses = await getAllExpenses();
-			// const allExpenses = mockExpenses;
 
 			if (allExpenses) {
 				setExpenses(allExpenses);
@@ -37,7 +36,7 @@ export function ExpenseContextProvider({
 	}, []);
 
 	async function addExpense(newExpense: Omit<Expense, "expenseId">) {
-		const expenseId = await addOne(STORE_NAME, newExpense);
+		const expenseId = await addExpenseToDB(newExpense);
 
 		setExpenses((prevExpenses) => [
 			...prevExpenses,

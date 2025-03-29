@@ -1,46 +1,51 @@
 // see: https://tailwindcss.com/docs/customizing-colors
 import tailwindColors from "tailwindcss/colors";
 
-export const COLOR_NAMES = {
-	SLATE: "slate",
-	GRAY: "gray",
-	ZINC: "zinc",
-	NEUTRAL: "neutral",
-	STONE: "stone",
-	RED: "red",
-	ORANGE: "orange",
-	AMBER: "amber",
-	YELLOW: "yellow",
-	LIME: "lime",
-	GREEN: "green",
-	EMERALD: "emerald",
-	TEAL: "teal",
-	CYAN: "cyan",
-	SKY: "sky",
-	BLUE: "blue",
-	INDIGO: "indigo",
-	VIOLET: "violet",
-	PURPLE: "purple",
-	FUCHSIA: "fuchsia",
-	PINK: "pink",
-	ROSE: "rose",
-} as const;
-export type ColorName = (typeof COLOR_NAMES)[keyof typeof COLOR_NAMES];
+export type Color = {
+	name: ColorName;
+	tone: ColorTone;
+};
 
-export const COLOR_TONES = {
-	T50: 50,
-	T100: 100,
-	T200: 200,
-	T300: 300,
-	T400: 400,
-	T500: 500,
-	T600: 600,
-	T700: 700,
-	T800: 800,
-	T900: 900,
-	T950: 950,
-} as const;
-export type ColorTone = (typeof COLOR_TONES)[keyof typeof COLOR_TONES];
+export const COLOR_NAMES = [
+	"slate",
+	"gray",
+	"zinc",
+	"neutral",
+	"stone",
+	"red",
+	"orange",
+	"amber",
+	"yellow",
+	"lime",
+	"green",
+	"emerald",
+	"teal",
+	"cyan",
+	"sky",
+	"blue",
+	"indigo",
+	"violet",
+	"purple",
+	"fuchsia",
+	"pink",
+	"rose",
+] as const;
+export type ColorName = (typeof COLOR_NAMES)[number];
+
+export const COLOR_TONES = [
+	"50",
+	"100",
+	"200",
+	"300",
+	"400",
+	"500",
+	"600",
+	"700",
+	"800",
+	"900",
+	"950",
+] as const;
+export type ColorTone = (typeof COLOR_TONES)[number];
 
 export function getColorCode(
 	colorName: ColorName,
